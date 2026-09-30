@@ -24,6 +24,12 @@ h6,
     font-weight: 500 !important;
 }
 
+html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+}
+
 .btn {
     font-family: 'Jost', sans-serif;
     font-weight: 600;
