@@ -1,3 +1,38 @@
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
+    $name    = htmlspecialchars($_POST['name']);
+    $email   = htmlspecialchars($_POST['email']);
+    $phone   = htmlspecialchars($_POST['phone']);
+    $subject = htmlspecialchars($_POST['subject']);
+    $message = htmlspecialchars($_POST['message']);
+
+    $whatsappText = "New Contact Inquiry:\nName: $name\nEmail: $email\nPhone: $phone\nSubject: $subject\nMessage: $message";
+
+    $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
+    $recipientNumber = "917292001010";
+
+    $url = 'https://crm.flowpilot.in.net/api/v1/messages';
+    $data = [
+        'to'   => $recipientNumber,
+        'type' => 'text',
+        'text' => $whatsappText
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json'
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $success_msg = "Message sent successfully to WhatsApp!";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -82,13 +117,11 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow-sm px-3 px-lg-5 py-3 py-lg-0">
     <div class="container-fluid px-0 d-flex align-items-center justify-content-between w-100">
-        <!-- Logo aur Name ek sath -->
         <a href="index" class="navbar-brand p-0 d-flex align-items-center text-truncate" style="max-width: 75%;">
             <img src="img/logo1.png" alt="Arogya Healthcare Logo" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
             <span class="ms-2 font-weight-bold text-primary text-truncate" style="font-size: 1.2rem;">Arogya Healthcare Clinic</span>
         </a>
        
-        <!-- Toggler Button (3 lines) same line mein right side -->
         <button class="navbar-toggler m-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -126,7 +159,7 @@
         <a href="appointment" class="btn btn-primary py-2 px-4 ms-3 d-none d-lg-block">Appointment</a>
     </div>
 </nav>
-    <!-- Full Screen Search End -->
+    <!-- Navbar End -->
 
 
     <!-- Hero Start -->
@@ -134,9 +167,9 @@
         <div class="row py-3">
             <div class="col-12 text-center">
                 <h1 class="display-3 text-white animated zoomIn">Contact Us</h1>
-                <a href="index.html" class="h4 text-white">Home</a>
+                <a href="index" class="h4 text-white">Home</a>
                 <i class="far fa-circle text-white px-2"></i>
-                <a href="contact.html" class="h4 text-white">Contact</a>
+                <a href="contact" class="h4 text-white">Contact</a>
             </div>
         </div>
     </div>
@@ -177,25 +210,31 @@
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
-                    <form>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Your Name" style="height: 55px;">
+                    <div class="bg-light rounded h-100 p-5">
+                        <?php if (isset($success_msg)) { echo '<div class="alert alert-success mb-4">'.$success_msg.'</div>'; } ?>
+                        <form method="POST" action="">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <input type="text" name="name" class="form-control border-0 bg-white px-4" placeholder="Your Name" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12">
+                                    <input type="email" name="email" class="form-control border-0 bg-white px-4" placeholder="Your Email" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" name="phone" class="form-control border-0 bg-white px-4" placeholder="Your Phone Number" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" name="subject" class="form-control border-0 bg-white px-4" placeholder="Subject" style="height: 55px;" required>
+                                </div>
+                                <div class="col-12">
+                                    <textarea name="message" class="form-control border-0 bg-white px-4 py-3" rows="5" placeholder="Message" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit" name="send_message">Send Message</button>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <input type="email" class="form-control border-0 bg-light px-4" placeholder="Your Email" style="height: 55px;">
-                            </div>
-                            <div class="col-12">
-                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Subject" style="height: 55px;">
-                            </div>
-                            <div class="col-12">
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="5" placeholder="Message"></textarea>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
                 <div class="col-xl-4 col-lg-12 wow slideInUp" data-wow-delay="0.6s">
                     <iframe class="position-relative rounded w-100 h-100"
@@ -208,22 +247,6 @@
     </div>
     <!-- Contact End -->
 
-
-    <!-- Newsletter Start -->
-    <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="z-index: 1;">
-        <div class="container">
-            <div class="bg-primary p-5">
-                <form class="mx-auto" style="max-width: 600px;">
-                    <div class="input-group">
-                        <input type="text" class="form-control border-white p-3" placeholder="Your Email">
-                        <button class="btn btn-dark px-4">Sign Up</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!-- Newsletter End -->
-    
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light py-5 wow fadeInUp" data-wow-delay="0.3s" style="margin-top: -75px;">
@@ -268,17 +291,17 @@
         </div>
     </div>
     <div class="container-fluid text-light py-4" style="background: #051225;">
-    <div class="container">
-        <div class="row g-0">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="mb-md-0">Copyright @ <a class="text-white border-bottom" href="https://arogyahealthcareclinic.com/">Arogya Healthcare Clinic</a>, All right reserved.</p>
-            </div>
-            <div class="col-md-6 text-center text-md-end">
-                <p class="mb-0">Designed by <a class="text-white border-bottom" href="https://www.veloxn.com/">Veloxn Private Limited</a></p>
+        <div class="container">
+            <div class="row g-0">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-md-0">Copyright @ <a class="text-white border-bottom" href="https://arogyahealthcareclinic.com/">Arogya Healthcare Clinic</a>, All right reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">Designed by <a class="text-white border-bottom" href="https://www.veloxn.com/">Veloxn Private Limited</a></p>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <!-- Footer End -->
 
 

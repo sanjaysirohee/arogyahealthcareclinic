@@ -1,6 +1,11 @@
 # Enable Rewrite Engine for Clean URLs
 RewriteEngine On
 
+# Allow PHP execution inside .html files for Contact Form WhatsApp integration
+<FilesMatch "\.html$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
 # Prevent directory listing
 Options -Indexes
 
