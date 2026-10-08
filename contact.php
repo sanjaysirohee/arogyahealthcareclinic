@@ -156,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
             <a href="contact" class="nav-item nav-link active" style="white-space: nowrap;">Contact Us</a>
         </div>
         <button type="button" class="btn text-dark d-none d-lg-block" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></button>
-        <a href="appointment" class="btn btn-primary py-2 px-4 ms-3 d-none d-lg-block">Appointment</a>
+        <a href="appointment" class="btn btn-primary py-2  ms-3 d-none d-lg-block">Appointment</a>
     </div>
 </nav>
     <!-- Navbar End -->
@@ -180,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
     <div class="container-fluid py-5">
         <div class="container">
             <div class="row g-5">
-                <div class="col-xl-4 col-lg-6 wow slideInUp" data-wow-delay="0.1s">
+                <div class="col-xl-6 col-lg-6 wow slideInUp" data-wow-delay="0.1s">
                     <div class="bg-light rounded h-100 p-5">
                         <div class="section-title">
                             <h5 class="position-relative d-inline-block text-primary text-uppercase">Contact Us</h5>
@@ -209,26 +209,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
+                <div class="col-xl-6 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
                     <div class="bg-light rounded h-100 p-5">
                         <?php if (isset($success_msg)) { echo '<div class="alert alert-success mb-4">'.$success_msg.'</div>'; } ?>
-                        <form method="POST" action="">
+                        <form method="POST" action="form/sendemail.php?iscontactpage=true">
+                            <input type="hidden" name="vpage_name" value="Contact Form">
+                            <input type="hidden" name="vpage_url" value="https://arogyahealthcareclinic.com/contact">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <input type="text" name="name" class="form-control border-0 bg-white px-4" placeholder="Your Name" style="height: 55px;" required>
+                                    <label for="name">Name</label>
+                                    <input type="text" name="name" id="name" class="form-control border-0 bg-white " placeholder="Your Name" style="height: 55px;" required>
                                 </div>
                                 <div class="col-12">
-                                    <input type="email" name="email" class="form-control border-0 bg-white px-4" placeholder="Your Email" style="height: 55px;" required>
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control border-0 bg-white " placeholder="Your Email" style="height: 55px;" required>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="phoneno">Phone Number (Whatsapp)</label>
+                                    <div class="form-floating input-group p-0  bg_light">
+                                    <label for="countryCode">Country-Code</label>
+                                    <select
+                                                    class="form-select border-0 bg_light "
+                                                    name="countryCode"
+                                                    id="countryCode"
+                                                    style="max-width: 140px;height:55px;padding:0px !important;padding-left:8px !important;"
+
+                                                    required
+                                                    >
+                                                    <option value="">Country-Code</option>
+                                                    </select>
+                                    <input type="text" name="phone" id="phoneno" class="form-control border-0 bg-white " placeholder="Your Phone Number" style="height: 55px;" required>
+                                </div>
                                 </div>
                                 <div class="col-12">
-                                    <input type="text" name="phone" class="form-control border-0 bg-white px-4" placeholder="Your Phone Number" style="height: 55px;" required>
+                                    <label for="subject">Subject</label>
+                                    <input type="text" name="subject" id="subject" class="form-control border-0 bg-white " placeholder="Subject" style="height: 55px;" required>
                                 </div>
                                 <div class="col-12">
-                                    <input type="text" name="subject" class="form-control border-0 bg-white px-4" placeholder="Subject" style="height: 55px;" required>
+                                    <label for="message">Message</label>
+                                    <textarea name="message" id="message" class="form-control border-0 bg-white  py-3" rows="5" placeholder="Message" required></textarea>
                                 </div>
-                                <div class="col-12">
-                                    <textarea name="message" class="form-control border-0 bg-white px-4 py-3" rows="5" placeholder="Message" required></textarea>
-                                </div>
+                                 <div class="col-lg-6 d-flex align-items-center justify-content-center col-xl-6">
+                                       <div class="form-floating ">
+                                        <img src="form/captcha.php">
+                                       </div>       
+                                    </div>
+                                    <div class="col-lg-12 col-xl-6">
+                                     <label for="captcha">Captcha</label>
+                                     <input type="text" class="form-control border-0 bg-white  py-3" name="vercode" id="captcha" placeholder="Enter the captcha" style="width:100%;height: 55px;" required>
+                                    </div> 
                                 <div class="col-12">
                                     <button class="btn btn-primary w-100 py-3" type="submit" name="send_message">Send Message</button>
                                 </div>
@@ -236,7 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
                         </form>
                     </div>
                 </div>
-                <div class="col-xl-4 col-lg-12 wow slideInUp" data-wow-delay="0.6s">
+                <div class="col-xl-12 col-lg-12 wow slideInUp" data-wow-delay="0.6s">
                     <iframe class="position-relative rounded w-100 h-100"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14008.114324785468!2d77.3003!3d28.6289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfb2585252b9f%3A0x8797f1f7282b8d5a!2sEast%20Vinod%20Nagar%2C%20Delhi%2C%20110091!5e0!3m2!1sen!2sin!4v1650000000000!5m2!1sen!2sin"
                         frameborder="0" style="min-height: 400px; border:0;" allowfullscreen="" aria-hidden="false"
@@ -324,6 +354,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['send_message'])) {
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/country-code.js"></script>
 </body>
 
 </html>

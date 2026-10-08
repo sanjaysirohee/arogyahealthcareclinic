@@ -67,10 +67,10 @@
             <div class="col-md-6 text-center text-lg-end">
                 <div class="position-relative d-inline-flex align-items-center bg-primary text-white top-shape px-5">
                     <div class="me-3 pe-3 border-end py-2">
-                        <p class="m-0"><i class="fa fa-envelope-open me-2"></i>arogyahealthcareclinic@gmail.com</p>
+                        <p class="m-0"><a class="text-white" href="mailto:arogyahealthcareclinic@gmail.com"><i class="fa fa-envelope-open me-2"></i>arogyahealthcareclinic@gmail.com</a></p>
                     </div>
                     <div class="py-2">
-                        <p class="m-0"><i class="fa fa-phone-alt me-2"></i>+91 98375 25270</p>
+                        <p class="m-0"><a class="text-white" href="tel:+919837525270"></a><i class="fa fa-phone-alt me-2"></i>+91 98375 25270</p>
                     </div>
                 </div>
             </div>
@@ -290,50 +290,92 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="appointment-form h-100 d-flex flex-column justify-content-center text-center p-5 wow zoomIn" data-wow-delay="0.6s">
+                    <div class="appointment-form h-100 d-flex flex-column justify-content-center  p-5 wow zoomIn" data-wow-delay="0.6s">
                         <h1 class="text-white mb-4">Make Appointment</h1>
-                        <form>
+                        <form action="form/sendemail.php" method="post">
+                            <input type="hidden" name="vpage_name" value="Home Appointment Form">
+                            <input type="hidden" name="vpage_url" value="https://arogyahealthcareclinic.com/">
                             <div class="row g-3">
                                 <div class="col-12 col-sm-6">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
+                                    <label for="service" class="text-white">Services</label>
+                                    <select class="form-select bg-light border-0" id="service" style="height: 55px;" name="services" required>
                                         <option selected>Select A Service</option>
-                                        <option value="1">Piles, Fissure & Fistula Care</option>
-                                        <option value="2">Chronic Care</option>
-                                        <option value="3">Personalized Herbal Treatments</option>
-                                        <option value="4">Herbal Medicine & Consultation</option>
+                                        <option value="Piles, Fissure & Fistula Care">Piles, Fissure & Fistula Care</option>
+                                        <option value="Chronic Care">Chronic Care</option>
+                                        <option value="Personalized Herbal Treatments">Personalized Herbal Treatments</option>
+                                        <option value="Herbal Medicine & Consultation">Herbal Medicine & Consultation</option>
                                     </select>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
+                                <label for="doctors" class="text-white">Doctors</label>
+                                    <select class="form-select bg-light border-0" id="doctors" style="height: 55px;" name="doctors" required>
                                         <option selected>Select Doctor</option>
-                                        <option value="1">Dr. Rajesh Sharma</option>
-                                        <option value="2">Dr. Priya Nair</option>
-                                        <option value="3">Dr. Alok Mishra</option>
-                                        <option value="4">Dr. Rahul Shah</option>
-                                        <option value="5">Dr. Puja Verma</option>
+                                        <option value="Dr. Rajesh Sharma">Dr. Rajesh Sharma</option>
+                                        <option value="Dr. Priya Nair">Dr. Priya Nair</option>
+                                        <option value="Dr. Alok Mishra">Dr. Alok Mishra</option>
+                                        <option value="Dr. Rahul Shah">Dr. Rahul Shah</option>
+                                        <option value="Dr. Puja Verma">Dr. Puja Verma</option>
                                     </select>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="text" class="form-control bg-light border-0" placeholder="Your Name" style="height: 55px;">
+                                    <label for="name" class="text-white">Name</label>
+                                    <input type="text" class="form-control bg-light border-0" id="name" placeholder="Your Name" style="height: 55px;" name="full_name" required>
                                 </div>
                                 <div class="col-12 col-sm-6">
-                                    <input type="email" class="form-control bg-light border-0" placeholder="Your Email" style="height: 55px;">
+                                    <label for="email" class="text-white">Email</label>
+                                    <input type="email" class="form-control bg-light border-0" placeholder="Your Email" id="email" style="height: 55px;" name="email" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="phoneno" class="text-white"> Phone Number</label>  
+                                   <div class="form-floating input-group p-0  bg_light">
+                                    <label for="countryCode">Country-Code</label>
+                                    <select
+                                                    class="form-select border-0 bg_light "
+                                                    name="countryCode"
+                                                    id="countryCode"
+                                                    style="max-width: 140px;height:55px;padding:0px !important;padding-left:8px !important;"
+
+                                                    required
+                                                    >
+                                                    <option value="">Country-Code</option>
+                                                    </select>
+                                                  
+                                    <input type="text" class="form-control border-0 bg-light px-4" id="phoneno" name="phoneno" placeholder="Your Phone Number" style="height: 55px;"  required>
+                                    <!-- <label for="phoneno">Phone Number</label> -->
+
+                                </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="date" id="date1" data-target-input="nearest">
+                                        <label for="app-date" class="text-white">Appointment Date</label>
                                         <input type="text"
-                                            class="form-control bg-light border-0 datetimepicker-input"
-                                            placeholder="Appointment Date" data-target="#date1" data-toggle="datetimepicker" style="height: 55px;">
+                                            class="form-control bg-light border-0 datetimepicker-input" id="app-date" name="app_date"
+                                            placeholder="Appointment Date" data-target="#date1" data-toggle="datetimepicker" style="height: 55px;" required>
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6">
                                     <div class="time" id="time1" data-target-input="nearest">
+                                        <label for="app-time" class="text-white">Appointment Time</label>
                                         <input type="text"
-                                            class="form-control bg-light border-0 datetimepicker-input"
-                                            placeholder="Appointment Time" data-target="#time1" data-toggle="datetimepicker" style="height: 55px;">
+                                            class="form-control bg-light border-0 datetimepicker-input" id="app-time" name="app_time"
+                                            placeholder="Appointment Time" data-target="#time1" data-toggle="datetimepicker" style="height: 55px;" required>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 col-sm-12">
+                                        <label for="message" class="text-white">Message</label>
+                                        <textarea row="10" class="form-control bg-light border-0" id="message" style="width:100%;height: 75px;" placeholder="Message" name="message" required></textarea>
+                                 
+                                </div>
+                                <div class="col-lg-6 d-flex align-items-center justify-content-center col-xl-6">
+                                       <div class="form-floating ">
+                                        <img src="form/captcha.php">
+                                       </div>       
+                                    </div>
+                                    <div class="col-lg-12 col-xl-6">
+                                     <label for="captcha" class="text-white">Captcha</label>
+                                     <input type="text" class="form-control bg-light border-0" name="vercode" id="captcha" placeholder="Enter the captcha" style="width:100%;height: 55px;" required>
+                                    </div>                         
+                                    <div class="col-12">
                                     <button class="btn btn-dark w-100 py-3" type="submit">Make Appointment</button>
                                 </div>
                             </div>
@@ -636,9 +678,9 @@
     <div class="container-fluid position-relative pt-5 wow fadeInUp" data-wow-delay="0.1s" style="z-index: 1;">
         <div class="container">
             <div class="bg-primary p-5">
-                <form class="mx-auto" style="max-width: 600px;">
+                <form action="form/subscribe.php" method="post" class="mx-auto" style="max-width: 600px;">
                     <div class="input-group">
-                        <input type="text" class="form-control border-white p-3" placeholder="Your Email">
+                        <input type="email" class="form-control border-white p-3" placeholder="Your Email" name="email" required>
                         <button class="btn btn-dark px-4">Sign Up</button>
                     </div>
                 </form>
@@ -724,6 +766,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script src="js/country-code.js"></script>
 </body>
 
 </html>
