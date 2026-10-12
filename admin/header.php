@@ -208,9 +208,9 @@ include ('config.php');
 
                             <ul aria-expanded="false" class="collapse">
 
-                                <li><a href="manage-queries.php">List Queries</a></li>
-								<li><a href="contact-queries.php">Contact Queries</a></li>
-								<li><a href="subscriber-queries.php">Subscription Queries</a></li>
+                                <li><a href="manage-queries.php">List Appointment</a></li>
+								<li><a href="contact-queries.php">List Contact</a></li>
+								<li><a href="subscriber-queries.php">List Subscriber</a></li>
 								
 
                             </ul>

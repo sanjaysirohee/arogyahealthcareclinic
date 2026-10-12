@@ -9,9 +9,9 @@ define("PASSWORD","");
 define("DATABASE","arogyahealthcareclinicdb");
 }else{
 define("HOSTNAME","localhost");
-define("USERNAME","veloxnc1_veloxndbun");
-define("PASSWORD","india@vbd121");
-define("DATABASE","veloxnc1_veloxndb");
+define("USERNAME","arogyahealthcareclinic_admindb");
+define("PASSWORD","HHduxRwzv9evuTaLuFtm");
+define("DATABASE","arogyahealthcareclinic_admindb");
 }
 
 $con=new mysqli(HOSTNAME,USERNAME,PASSWORD,DATABASE) or die("Unable to connect");

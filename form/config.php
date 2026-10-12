@@ -9,9 +9,9 @@ $password = "";
 $dbname = "arogyahealthcareclinicdb";
 }else{
  $servername = "localhost";
- $username = "maxgrowangel_mgabd";
- $password = "2PPhQfaXKp4wdxUrLxcb";
- $dbname = "maxgrowangel_mgabd";
+ $username = "arogyahealthcareclinic_admindb";
+ $password = "HHduxRwzv9evuTaLuFtm";
+ $dbname = "arogyahealthcareclinic_admindb";
 }
 
 

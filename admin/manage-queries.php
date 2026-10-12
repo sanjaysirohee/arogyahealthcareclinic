@@ -12,13 +12,13 @@ include_once ('header.php');
         <!-- ============================================================== -->
         <div class="row page-titles">
             <div class="col-md-5 align-self-center">
-                <h4 class="text-themecolor">List Queries</h4>
+                <h4 class="text-themecolor">List Appointment</h4>
             </div>
             <div class="col-md-7 align-self-center text-right">
                 <div class="d-flex justify-content-end align-items-center">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-                        <li class="breadcrumb-item active">List Queries</li>
+                        <li class="breadcrumb-item active">List Appointment</li>
                     </ol>
                 </div>
             </div>
@@ -44,7 +44,7 @@ include_once ('header.php');
                             unset($_SESSION['del_location']);
                         }
                         ?>
-                        <h4 class="card-title">Manage Queries</h4>
+                        <h4 class="card-title">Manage Appointments</h4>
                         <h6 class="card-subtitle"></h6>
                         <div class="table-responsive m-t-40">
                             <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
