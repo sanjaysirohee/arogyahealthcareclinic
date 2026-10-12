@@ -140,6 +140,33 @@ $conn->close();
             echo "User Mailer Error: " . $userMail->ErrorInfo;
         }
       }
+
+      // Flowpilot CRM WhatsApp Integration (Only for Contact Page)
+if (isset($_GET['iscontactpage']) && $_GET['iscontactpage'] == 'true') {
+    $whatsappText = "🚨 New Contact Inquiry:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n📝 Subject: " . $subject . "\n💬 Message: " . $message;
+    
+    $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
+    $adminRecipientNumber = "917292001010"; // Admin WhatsApp Number
+
+    $url = 'https://crm.flowpilot.in.net/api/v1/messages';
+    $data = [
+        'to'   => $adminRecipientNumber,
+        'type' => 'text',
+        'text' => $whatsappText
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json'
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+}
 // Send message to Whatsapp Code Start
 //  if ($subjectV == 'ContactPage') {
 //     $Message = "&type=text&message=Thanks+for+contacting+Website+Development+India.+We+will+get+back+to+you+soon,+you+can+post+more+queries+here....";  
