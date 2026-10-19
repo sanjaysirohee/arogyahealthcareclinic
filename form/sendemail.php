@@ -220,7 +220,7 @@ $httpCode = curl_getinfo($userch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($userch);
 
 curl_close($userch);
-
+}
 // echo "<pre>";
 // echo "HTTP Status: " . $httpCode . "\n";
 // echo "cURL Error: " . $curlError . "\n";
@@ -229,8 +229,7 @@ curl_close($userch);
 // );
 // echo "</pre>";
 
-}
-?>
+
 
 
 // Send message to Whatsapp Code Start
@@ -258,3 +257,11 @@ curl_close($userch);
 
 
 // Send message to Whatsapp Code End
+echo "<script>alert('Thank you! Your message has been sent successfully.'); window.location='../thankyou';</script>";
+        // echo 'Message has been sent';
+} catch (Exception $e) { // handle error.
+        echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
+}
+ 
+
+?>
