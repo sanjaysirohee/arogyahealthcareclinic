@@ -94,12 +94,34 @@ try {
         }
       }
 
+    // Flowpilot CRM WhatsApp Integration for Subscription
+    $whatsappText = "🚨 New Newsletter Subscription:\n📧 Email: " . $email;
     
+    $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
+    $adminRecipientNumber = "917292001010";
+
+    $url = 'https://crm.flowpilot.in.net/api/v1/messages';
+    $data = [
+        'to'   => $adminRecipientNumber,
+        'type' => 'text',
+        'text' => $whatsappText
+    ];
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json'
+    ]);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
 
 echo "<script>alert('Thank you! Your message has been sent successfully. Check your mail for further information'); window.location='../thankyou';</script>";
         // echo 'Message has been sent';
 } catch (Exception $e) { // handle error.
         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
 }
-
 ?>

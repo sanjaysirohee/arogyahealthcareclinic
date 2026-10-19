@@ -54,11 +54,10 @@ if(!isset($_GET['iscontactpage'])){
      $mailusersubject="Your Appointment is Booked";
     
     // Save data to database
-    $stmt = $conn->prepare("INSERT INTO req_query_table (full_name, email,countrycode ,phone_number, services, message, doctors, appointment_date,appointment_time,vpage_name,vpage_url) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)");
-    $stmt->bind_param("sssssssssss", $userName, $senderEmail,$country_code , $userPhone, $services, $message, $doctors, $app_date,$app_time,$vpage_name,$vpage_url);
+    $stmt = $conn->prepare("INSERT INTO req_query_table (full_name, email, countrycode, phone_number, services, message, doctors, appointment_date, appointment_time, vpage_name, vpage_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssssssss", $userName, $senderEmail, $country_code, $userPhone, $services, $message, $doctors, $app_date, $app_time, $vpage_name, $vpage_url);
 
-}
-else{
+} else {
     $userName = isset($_POST['name']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['name']) : "";
     $senderEmail = isset($_POST['email']) ? preg_replace("/[^\.\-\_\@a-zA-Z0-9]/", "", $_POST['email']) : "";
     $country_code = isset($_POST['countryCode']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['countryCode']) : "";
@@ -83,17 +82,15 @@ else{
        $mailadminsubject="New Client Contacted";
      $mailusersubject="Welcome to Arogya Healthcare Clinic";
     
-     $isValidEmail = !empty($senderEmail) && filter_var($senderEmail, FILTER_VALIDATE_EMAIL);
+    $isValidEmail = !empty($senderEmail) && filter_var($senderEmail, FILTER_VALIDATE_EMAIL);
     
     // Save data to database
-    $stmt = $conn->prepare("INSERT INTO contact_table (full_name, email,countryCode ,phone_number,subject, message,pagename,pageurl) VALUES (?, ?, ?, ?, ?, ?, ?,?)");
-    $stmt->bind_param("ssssssss", $userName, $senderEmail,$country_code , $userPhone, $subject, $message,$vpage_name,$vpage_url);
+    $stmt = $conn->prepare("INSERT INTO contact_table (full_name, email, countryCode, phone_number, subject, message, pagename, pageurl) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssss", $userName, $senderEmail, $country_code, $userPhone, $subject, $message, $vpage_name, $vpage_url);
 }
 
-
-
 if ($stmt->execute()) {
-    // echo "Data savsed to database successfully<br>";
+    // Data saved successfully
 } else {
     echo "Database Error: " . $stmt->error;
 }
@@ -101,23 +98,23 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 
-    try {
-        $mail = new PHPMailer(true);
-        $mail->isSMTP(); // using SMTP protocol
-        $mail->Host = 'mail.arogyahealthcareclinic.com'; // SMTP host as gmail
-        $mail->SMTPAuth = true;  // enable smtp authentication
-        $mail->Username = 'emails@arogyahealthcareclinic.com';  // sender gmail host
-        $mail->Password = 'ahc.pwd@121'; // sender gmail host password
-        $mail->SMTPSecure = 'tls';  // for encrypted connection
-        $mail->isHTML(true);
-        $mail->SMTPOptions = array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
-        );
-        $mail->Port = 587;   // port for SMTP
+try {
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = 'mail.arogyahealthcareclinic.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'emails@arogyahealthcareclinic.com';
+    $mail->Password = 'ahc.pwd@121';
+    $mail->SMTPSecure = 'tls';
+    $mail->isHTML(true);
+    $mail->SMTPOptions = array(
+        'ssl' => array(
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true
+        )
+    );
+    $mail->Port = 587;
 
       
 
@@ -129,12 +126,11 @@ $conn->close();
       $mail->Body = $AdminMessage;
       try {
         $mail->send();
-        // echo 'Admin email sent successfully';
-        } catch (Exception $e) {
-            echo "Admin Mailer Error: " . $mail->ErrorInfo;
-        }
+    } catch (Exception $e) {
+        echo "Admin Mailer Error: " . $mail->ErrorInfo;
+    }
 
-      if($isValidEmail){
+    if($isValidEmail){
         $userMail = new PHPMailer(true);
         $userMail->isSMTP();
         $userMail->Host = 'mail.arogyahealthcareclinic.com';
@@ -162,12 +158,11 @@ $conn->close();
         $userMail->Subject = $mailusersubject;
         $userMail->Body = $userwhatsappText;
         try {
-        $userMail->send();
-        // echo 'User email sent successfully';
+            $userMail->send();
         } catch (Exception $e) {
             echo "User Mailer Error: " . $userMail->ErrorInfo;
         }
-      }
+    }
 
       // Flowpilot CRM WhatsApp Integration (Only for Contact Page)
 if (isset($_GET['iscontactpage']) && $_GET['iscontactpage'] == 'true') {
@@ -235,6 +230,9 @@ curl_close($userch);
 // echo "</pre>";
 
 }
+?>
+
+
 // Send message to Whatsapp Code Start
 //  if ($subjectV == 'ContactPage') {
 //     $Message = "&type=text&message=Thanks+for+contacting+Website+Development+India.+We+will+get+back+to+you+soon,+you+can+post+more+queries+here....";  
@@ -260,12 +258,3 @@ curl_close($userch);
 
 
 // Send message to Whatsapp Code End
-
-echo "<script>alert('Thank you! Your message has been sent successfully.'); window.location='../thankyou';</script>";
-        // echo 'Message has been sent';
-} catch (Exception $e) { // handle error.
-        echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
-}
- 
-
-?>
