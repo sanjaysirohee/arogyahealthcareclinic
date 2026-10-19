@@ -32,7 +32,26 @@ if(!isset($_GET['iscontactpage'])){
     $vpage_name = isset($_POST['vpage_name']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_name']) : "";
     $vpage_url = isset($_POST['vpage_url']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_url']) : "";
     
+    $userwhatsappText=
+         "<p>Dear <b>{$userName}</b>,</p>
+           <p>Thank you for Booking Appointment with <b>Arogya Healthcare Clinic</b>. We have received your appointment date and time. If you have any query feel free to contact us on our Email or Helpline number</p>
+           <p><b>Your Message:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>
+           <br><p>Best regards,<br><b>Arogya Healthcare Clinic Team</b></p>";
+   $AdminMessage=
+       "<h3> New Appointment Booked at Arogya Healthcare Clinic </h3>
+       <h3> {$userName} has a Query</h3>
+       <p><b>Name:</b> {$userName}</p>
+       <p><b>Phone no:</b> {$userPhone}</p>
+       <p><b>Email:</b> {$senderEmail}</p>
+       <p><b>Service:</b> {$services}</p>
+       <p><b>Doctor:</b> {$doctors}</p>
+       <p><b>Appointment Date:</b> {$app_date}</p>
+       <p><b>Appointment Time:</b> {$app_time}</p>
+       <p><b>Message from {$userName}:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>
+       <p> Check Arogya healthcare clinic Admin for full client information</p>";
      $isValidEmail = !empty($senderEmail) && filter_var($senderEmail, FILTER_VALIDATE_EMAIL);
+     $mailadminsubject="New Appointment Booked";
+     $mailusersubject="Your Appointment is Booked";
     
     // Save data to database
     $stmt = $conn->prepare("INSERT INTO req_query_table (full_name, email,countrycode ,phone_number, services, message, doctors, appointment_date,appointment_time,vpage_name,vpage_url) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?,?)");
@@ -48,6 +67,21 @@ else{
     $message = isset($_POST['message']) ? preg_replace("/(From:|To:|BCC:|CC:|Subject:|Content-Type:)/", "", $_POST['message']) : "";
     $vpage_name = isset($_POST['vpage_name']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_name']) : "";
     $vpage_url = isset($_POST['vpage_url']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_url']) : "";
+     $userwhatsappText=
+         "<p>Dear <b>{$userName}</b>,</p>
+           <p>Thank you for reaching out to <b>Arogya Healthcare Clinic</b>. We have received your message and will get back to you soon.</p>
+           <p><b>Your Message:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>
+           <br><p>Best regards,<br><b>Arogya Healthcare Clinic Team</b></p>";
+   $AdminMessage=
+       "<h3> New Message from Arogya Healthcare clinic </h3>
+       <h3> {$userName} has a Query</h3>
+       <p><b>Name:</b> {$userName}</p>
+       <p><b>Phone no:</b> {$userPhone}</p>
+       <p><b>Email:</b> {$senderEmail}</p>
+       <p><b>Message from {$userName}:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>
+       <p> Check Arogya healthcare clinic Admin for full client information</p>";
+       $mailadminsubject="New Client Contacted";
+     $mailusersubject="Welcome to Arogya Healthcare Clinic";
     
      $isValidEmail = !empty($senderEmail) && filter_var($senderEmail, FILTER_VALIDATE_EMAIL);
     
@@ -85,19 +119,13 @@ $conn->close();
         );
         $mail->Port = 587;   // port for SMTP
 
-      $AdminMessage=
-        "<h3> New Message from Arogya Healthcare clinic </h3>
-        <h3> {$userName} has a Query</h3>
-        <p><b>Name:</b> {$userName}</p>
-        <p><b>Phone no:</b> {$userPhone}</p>
-        <p><b>Email:</b> {$senderEmail}</p>
-        <p><b>Message from {$userName}:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>";
+      
 
 
       $mail->setFrom('emails@arogyahealthcareclinic.com', "Arogya Healthcare Clinic");
       if ($isValidEmail) $mail->addReplyTo($senderEmail, $userName);
       $mail->addAddress('emails@arogyahealthcareclinic.com', "Admin");
-      $mail->Subject = "New Client Message";
+      $mail->Subject = $mailadminsubject;
       $mail->Body = $AdminMessage;
       try {
         $mail->send();
@@ -123,7 +151,7 @@ $conn->close();
                 'allow_self_signed' => true
             ]
         ];
-        $userMessage=
+        $userwhatsappText=
           "<p>Dear <b>{$userName}</b>,</p>
             <p>Thank you for reaching out to <b>Arogya Healthcare Clinic</b>. We have received your message and will get back to you soon.</p>
             <p><b>Your Message:</b><br>" . nl2br(htmlspecialchars($message)) . "</p>
@@ -131,8 +159,8 @@ $conn->close();
             
         $userMail->setFrom('emails@arogyahealthcareclinic.com', "Arogya Healthcare Clinic");
         $userMail->addAddress($senderEmail, $userName);
-        $userMail->Subject = 'Welcome to Arogya Healthcare Clinic';
-        $userMail->Body = $userMessage;
+        $userMail->Subject = $mailusersubject;
+        $userMail->Body = $userwhatsappText;
         try {
         $userMail->send();
         // echo 'User email sent successfully';
@@ -143,29 +171,69 @@ $conn->close();
 
       // Flowpilot CRM WhatsApp Integration (Only for Contact Page)
 if (isset($_GET['iscontactpage']) && $_GET['iscontactpage'] == 'true') {
-    $whatsappText = "🚨 New Contact Inquiry:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n📝 Subject: " . $subject . "\n💬 Message: " . $message;
-    
+    $adminwhatsappText = "🚨 New Contact Inquiry:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n📝 Subject: " . $subject . "\n💬 Message: " . $message;
+    $userwhatsappText = "Hi " . $userName . 
+    ", thank you for contacting Arogya Healthcare Clinic! We have received your inquiry and will get back to you soon.";
     $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
     $adminRecipientNumber = "917292001010"; // Admin WhatsApp Number
-
+    $userRecipientNumber = $country_code.$userPhone;
+    echo $userRecipientNumber;
     $url = 'https://crm.flowpilot.in.net/api/v1/messages';
     $data = [
         'to'   => $adminRecipientNumber,
         'type' => 'text',
-        'text' => $whatsappText
+        'text' => $adminwhatsappText
+    ];
+    $userdata = [
+        'to'   => $userRecipientNumber,
+        'type' => 'text',
+        'text' => $userwhatsappText
     ];
 
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . $apiKey,
-        'Content-Type: application/json'
-    ]);
+    
+$ch = curl_init($url);
 
-    $response = curl_exec($ch);
-    curl_close($ch);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $apiKey,
+    'Content-Type: application/json'
+]);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
+
+curl_close($ch);
+
+
+
+$userch=curl_init($url);
+
+
+curl_setopt($userch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($userch, CURLOPT_POST, true);
+curl_setopt($userch, CURLOPT_POSTFIELDS, json_encode($userdata));
+curl_setopt($userch, CURLOPT_HTTPHEADER, [
+    'Authorization: Bearer ' . $apiKey,
+    'Content-Type: application/json'
+]);
+
+$response = curl_exec($userch);
+$httpCode = curl_getinfo($userch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($userch);
+
+curl_close($userch);
+
+// echo "<pre>";
+// echo "HTTP Status: " . $httpCode . "\n";
+// echo "cURL Error: " . $curlError . "\n";
+// echo "API Response: " . htmlspecialchars(
+//     $response === false ? '' : $response
+// );
+// echo "</pre>";
+
 }
 // Send message to Whatsapp Code Start
 //  if ($subjectV == 'ContactPage') {

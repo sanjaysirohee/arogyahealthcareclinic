@@ -84,19 +84,19 @@ include ('config.php');
 
                 <div class="navbar-header">
 
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand " href="#">
                         <?php $baseurl = $_SERVER['SERVER_NAME'];
                         if($baseurl=='localhost'){
                             ?>
-                            <img src="<?php echo BASE_URL; ?>arogyahealthcareclinic/img/logo1.png" class="rounded-circle" alt="homepage" style="width:100%; height: 80px; object-fit: cover;"
-                                 />
+                            <a href='/' style="width:100%; height: 80px; display:flex"> <img src="<?php echo BASE_URL; ?>arogyahealthcareclinic/img/logo1.png" class="rounded-circle" alt="homepage" style=" object-fit: cover;"
+                                 /></a>
                             <?php
                         }
                         else{
                             ?>
                             
-                            <img src="<?php echo BASE_URL; ?>img/logo1.png" alt="homepage" class="rounded-circle"
-                               style="width:100%; height: 80px; object-fit: cover;" />
+                           <a href="/" style="width:100%; height: 80px; display:flex"> <img src="<?php echo BASE_URL; ?>img/logo1.png" alt="homepage" class="rounded-circle"
+                               style=" object-fit: cover;" /></a>
                             <?php
                         }
                         ?>
