@@ -47,7 +47,7 @@ include('config.php');
 					if($baseurl=='localhost'){ ?>
 	<form class="form-horizontal form-material" id="loginform" action="<?php echo BASE_URL ?>arogyahealthcareclinic/admin/controller/auth.php" method="post">
 					<?php }else{ ?>
-         <form class="form-horizontal form-material" id="loginform" action="<?php echo BASE_URL ?>/admin/controller/auth.php" method="post">
+         <form class="form-horizontal form-material" id="loginform" action="<?php echo BASE_URL ?>admin/controller/auth.php" method="post">
 					<?php } ?>
 				
 				

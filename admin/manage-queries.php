@@ -47,9 +47,10 @@ include_once ('header.php');
                         <h4 class="card-title">Manage Appointments</h4>
                         <h6 class="card-subtitle"></h6>
                         <div class="table-responsive m-t-40">
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                            <table id="queryTable" class="display nowrap table table-hover table-striped table-bordered"
                                 cellspacing="0" width="100%">
                                 <thead>
+                                    
                                     <tr>
                                         <th>S.No</th>
                                         <th>Customer Name</th>
@@ -69,7 +70,8 @@ include_once ('header.php');
 
                                 <tbody>
                                     <?php
-                                    $fetch_blog = mysqli_query($con, "select * from req_query_table order by id desc");
+                                    
+                                    $fetch_blog = mysqli_query($con, "select * from req_query_table ORDER BY id DESC");
                                         $i = 1;
                                     while ($res_blog = mysqli_fetch_array($fetch_blog)) {
                                         

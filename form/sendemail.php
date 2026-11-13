@@ -195,7 +195,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Authorization: Bearer ' . $apiKey,
     'Content-Type: application/json'
 ]);
-
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $curlError = curl_error($ch);
@@ -257,7 +257,7 @@ curl_close($userch);
 
 
 // Send message to Whatsapp Code End
-echo "<script>alert('Thank you! Your message has been sent successfully.'); window.location='../thankyou';</script>";
+// echo "<script>alert('Thank you! Your message has been sent successfully.'); window.location='../thankyou';</script>";
         // echo 'Message has been sent';
 } catch (Exception $e) { // handle error.
         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;

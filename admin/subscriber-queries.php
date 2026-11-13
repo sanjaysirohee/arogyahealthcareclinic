@@ -47,7 +47,7 @@ include_once ('header.php');
                         <h4 class="card-title">Manage Subscribers</h4>
                         <h6 class="card-subtitle"></h6>
                         <div class="table-responsive m-t-40">
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered"
+                            <table id="queryTable" class="display nowrap table table-hover table-striped table-bordered"
                                 cellspacing="0" width="100%">
                                 <thead>
                                     <tr>

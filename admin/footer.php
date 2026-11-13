@@ -33,7 +33,11 @@
  <script src="cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
  <script src="cdn.datatables.net/buttons/1.5.1/js/buttons5.min.js"></script>
  <script src="cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+<!-- pagenation in database script-->
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
  <!-- end - This is for export functionality only -->
+
 
  <script>
      $(function() {
@@ -126,6 +130,33 @@
   filebrowserUploadUrl: "/upload.php",
   filebrowserUploadMethod: "form"
  });
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+    $('#queryTable').DataTable({
+
+        "pageLength": 10,
+
+        "lengthMenu": [10, 25, 50, 100, 200],
+
+        "ordering": true,
+
+        "searching": true,
+
+        "paging": true,
+
+        "info": true,
+
+        "scrollX": true
+
+    });
+
+});
 </script>
  </body>
 

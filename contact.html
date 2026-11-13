@@ -37,7 +37,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style.css?v=1" rel="stylesheet">
 </head>
 
 <body>
@@ -176,7 +176,7 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 wow slideInUp" data-wow-delay="0.3s">
                     <div class="bg-light rounded h-100 p-5">
-                        <form method="POST" action="form/sendemail.php?iscontactpage=true">
+                        <form method="POST" action="form/sendemail.php?iscontactpage=true" id="contactform">
                             <input type="hidden" name="vpage_name" value="Contact Form">
                             <input type="hidden" name="vpage_url" value="https://arogyahealthcareclinic.com/contact">
                             <div class="row g-3">
@@ -239,7 +239,26 @@
         </div>
     </div>
     <!-- Contact End -->
+<div id="otpModal" class="custom-modal">
 
+  <div class="custom-modal-content">
+
+    <div class="custom-modal-header">
+      <h5>Phone Verification</h5>
+    </div>
+
+    <div class="custom-modal-body">
+      <p>Please enter the OTP sent to your WhatsApp.</p>
+      <input type="text" id="otpInput" class="form-control" placeholder="Enter OTP">
+    </div>
+
+    <div class="custom-modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="verifyotp()">Verify OTP</button>
+    </div>
+
+  </div>
+</div>
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light py-5 wow fadeInUp" data-wow-delay="0.3s" style="margin-top: -75px;">
@@ -318,6 +337,62 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script src="js/country-code.js"></script>
+    <script>
+
+    const form = document.getElementById("contactform");
+
+    form.addEventListener("submit", function(e){
+       debugger;
+        e.preventDefault();
+        const phoneno = document.getElementById('phoneno').value;
+        const captcha = document.getElementById('captcha').value;
+        const countryCode=document.getElementById('countryCode').value;
+        console.log(countryCode);
+        fetch(`./form/send_otp.php?phone=${phoneno}&vercode=${captcha}&countryCode=${countryCode}`)
+        .then(res => res.text())
+        .then(data => {
+            
+            data = data.trim();
+            debugger;
+            if(data == 'OTP_SENT'){
+                document.getElementById("otpModal").style.display = "flex";
+            }
+    else if(data === "INVALID_CAPTCHA"){
+       alert("Captcha is incorrect");
+    }
+    else if(data === "PHONE_MISSING"){
+        alert("Phone number missing");
+    }
+    else{
+        alert("Unexpected response: " + data);
+   }
+
+})
+    });
+
+function closeModal() {
+  document.getElementById("otpModal").style.display = "none";
+}
+
+</script>
+<script>
+   function verifyotp(){
+
+    let enteredOtp = document.getElementById("otpInput").value;
+
+    if(!enteredOtp){
+        alert("Enter OTP first");
+        return;
+    }
+
+    document.getElementById("otpHidden").value = enteredOtp;
+
+    
+    document.getElementById("contactform").submit();
+}
+
+
+</script>
 </body>
 
 </html>
