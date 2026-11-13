@@ -1,5 +1,8 @@
 <?php
 session_start();
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 // Generate a random alphanumeric string
 $characters = '123456789';
@@ -25,7 +28,6 @@ imagestring($image_p, $font_size, $text_x_position, $text_y_position, $text, $te
 // Output the CAPTCHA image
 header("Content-Type: image/png");
 imagepng($image_p);
-imagejpeg($image_p, null, 80); // Output the image with 80% quality
 
 // Free memory
 imagedestroy($image_p);

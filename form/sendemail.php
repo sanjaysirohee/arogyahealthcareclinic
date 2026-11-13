@@ -164,70 +164,84 @@ try {
         }
     }
 
-      // Flowpilot CRM WhatsApp Integration (Only for Contact Page)
-if (isset($_GET['iscontactpage']) && $_GET['iscontactpage'] == 'true') {
-    $adminwhatsappText = "🚨 New Contact Inquiry:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n📝 Subject: " . $subject . "\n💬 Message: " . $message;
-    $userwhatsappText = "Hi " . $userName . 
-    ", thank you for contacting Arogya Healthcare Clinic! We have received your inquiry and will get back to you soon.";
-    $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
-    $adminRecipientNumber = "917292001010"; // Admin WhatsApp Number
-    $userRecipientNumber = $country_code.$userPhone;
-    echo $userRecipientNumber;
+    $isContactPage = isset($_GET['iscontactpage']) && $_GET['iscontactpage'] === 'true';
+    $adminRecipientNumber = '917292001010';
+    $userRecipientNumber = preg_replace('/\D+/', '', $country_code . $userPhone);
+
+    if ($isContactPage) {
+        $adminwhatsappText = "🚨 New Contact Inquiry:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n📝 Subject: " . $subject . "\n💬 Message: " . $message;
+        $userwhatsappText = "Hi " . $userName . ", thank you for contacting Arogya Healthcare Clinic! We have received your inquiry and will get back to you soon.";
+    } else {
+        $adminwhatsappText = "🚨 New Appointment Booked:\n👤 Name: " . $userName . "\n📧 Email: " . $senderEmail . "\n📱 Phone: " . $country_code . " " . $userPhone . "\n🩺 Service: " . $services . "\n👨‍⚕️ Doctor: " . $doctors . "\n📅 Date: " . $app_date . "\n🕒 Time: " . $app_time . "\n💬 Message: " . $message;
+        $userwhatsappText = "Hi " . $userName . ", we have received your appointment request for " . $app_date . " at " . $app_time . ". Arogya Healthcare Clinic will contact you to confirm.";
+    }
+
+    $whatsappMessages = [
+        ['recipient' => 'admin', 'to' => $adminRecipientNumber, 'text' => $adminwhatsappText],
+        ['recipient' => 'user', 'to' => $userRecipientNumber, 'text' => $userwhatsappText]
+    ];
+    $apiKey = getenv('FLOWPILOT_API_KEY');
+    $whatsappDeliveryFailed = false;
     $url = 'https://crm.flowpilot.in.net/api/v1/messages';
-    $data = [
-        'to'   => $adminRecipientNumber,
-        'type' => 'text',
-        'text' => $adminwhatsappText
-    ];
-    $userdata = [
-        'to'   => $userRecipientNumber,
-        'type' => 'text',
-        'text' => $userwhatsappText
-    ];
 
-    
-$ch = curl_init($url);
+    if ($apiKey === false || trim($apiKey) === '') {
+        error_log('Flowpilot WhatsApp delivery failed: FLOWPILOT_API_KEY is not configured.');
+        $whatsappDeliveryFailed = true;
+    } elseif (!function_exists('curl_init')) {
+        error_log('Flowpilot WhatsApp delivery failed: PHP cURL extension is not available.');
+        $whatsappDeliveryFailed = true;
+    } else {
+        foreach ($whatsappMessages as $whatsappMessage) {
+            if ($whatsappMessage['to'] === '') {
+                error_log('Flowpilot WhatsApp delivery failed: missing ' . $whatsappMessage['recipient'] . ' recipient number.');
+                $whatsappDeliveryFailed = true;
+                continue;
+            }
 
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . $apiKey,
-    'Content-Type: application/json'
-]);
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-$response = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlError = curl_error($ch);
+            $payload = json_encode([
+                'to' => $whatsappMessage['to'],
+                'type' => 'text',
+                'text' => $whatsappMessage['text']
+            ]);
 
-curl_close($ch);
+            if ($payload === false) {
+                error_log('Flowpilot WhatsApp delivery failed: could not encode the ' . $whatsappMessage['recipient'] . ' message.');
+                $whatsappDeliveryFailed = true;
+                continue;
+            }
 
+            $ch = curl_init($url);
+            if ($ch === false) {
+                error_log('Flowpilot WhatsApp delivery failed: could not initialize cURL for the ' . $whatsappMessage['recipient'] . ' message.');
+                $whatsappDeliveryFailed = true;
+                continue;
+            }
 
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $payload,
+                CURLOPT_HTTPHEADER => [
+                    'Authorization: Bearer ' . $apiKey,
+                    'Content-Type: application/json'
+                ],
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 25
+            ]);
 
-$userch=curl_init($url);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
 
-
-curl_setopt($userch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($userch, CURLOPT_POST, true);
-curl_setopt($userch, CURLOPT_POSTFIELDS, json_encode($userdata));
-curl_setopt($userch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . $apiKey,
-    'Content-Type: application/json'
-]);
-
-$response = curl_exec($userch);
-$httpCode = curl_getinfo($userch, CURLINFO_HTTP_CODE);
-$curlError = curl_error($userch);
-
-curl_close($userch);
-}
-// echo "<pre>";
-// echo "HTTP Status: " . $httpCode . "\n";
-// echo "cURL Error: " . $curlError . "\n";
-// echo "API Response: " . htmlspecialchars(
-//     $response === false ? '' : $response
-// );
-// echo "</pre>";
+            if ($response === false || $httpCode < 200 || $httpCode >= 300) {
+                $errorDetail = $response === false ? $curlError : 'HTTP ' . $httpCode;
+                error_log('Flowpilot WhatsApp delivery failed for ' . $whatsappMessage['recipient'] . ': ' . $errorDetail);
+                $whatsappDeliveryFailed = true;
+            }
+        }
+    }
 
 
 
@@ -257,7 +271,10 @@ curl_close($userch);
 
 
 // Send message to Whatsapp Code End
-// echo "<script>alert('Thank you! Your message has been sent successfully.'); window.location='../thankyou';</script>";
+$confirmationMessage = $whatsappDeliveryFailed
+    ? 'Your request was received, but WhatsApp notifications could not be delivered. Please contact the clinic if needed.'
+    : 'Thank you! Your message has been sent successfully.';
+echo '<script>alert(' . json_encode($confirmationMessage) . '); window.location="../thankyou";</script>';
         // echo 'Message has been sent';
 } catch (Exception $e) { // handle error.
         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
