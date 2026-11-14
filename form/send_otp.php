@@ -2,10 +2,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 ini_set('log_errors', '1');
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// session_start();
 
 $vercode = $_GET['vercode'] ?? '';
-
+error_log("Submitted CAPTCHA: " . $vercode);
+error_log("Session CAPTCHA: " . ($_SESSION['vercode'] ?? 'NOT SET'));
 if(empty($vercode) || !isset($_SESSION["vercode"]) || $_SESSION["vercode"] != $vercode){
     echo "INVALID_CAPTCHA";
     exit;
@@ -25,6 +29,9 @@ $_SESSION['otp_time'] = time();
 $otp_message = "OTP for veloxn.com contact from is: ".$otp." please mention it there.";
 
 $whatsappMessage =  $otp_message;
+$_GET['number']=$countrycode.$phone;
+$_GET['message']=$whatsappMessage;
+require 'send-url.php';
 
 // $url = "https://chatbot.veloxn.com/api/send?number=".$countrycode . $phone . $whatsappMessage . "&instance_id=69EB6872C2AD0&access_token=69174aa47b39f";
 
@@ -58,63 +65,63 @@ $whatsappMessage =  $otp_message;
     // $userwhatsappText = "Hi " . $userName . 
     // ", thank you for contacting Arogya Healthcare Clinic! We have received your inquiry and will get back to you soon.";
 
-    $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
-    // $adminRecipientNumber = "917292001010"; // Admin WhatsApp Number
-    $userRecipientNumber = $countrycode.$phone;
+//     $apiKey = "wsk_wEQ97upCrL453503tHxKgUVAmrdChk9askHbXUe0"; 
+//     // $adminRecipientNumber = "917292001010"; // Admin WhatsApp Number
+//     $userRecipientNumber = $countrycode.$phone;
     
-    $url = 'https://crm.flowpilot.in.net/api/v1/messages';
-    $data = [
-        'to'   => $userRecipientNumber,
-        'type' => 'text',
-        'text' => $whatsappMessage
-    ];
-    // $userdata = [
-    //     'to'   => $userRecipientNumber,
-    //     'type' => 'text',
-    //     'text' => $userwhatsappText
-    // ];
+//     $url = 'https://crm.flowpilot.in.net/api/v1/messages';
+//     $data = [
+//         'to'   => $userRecipientNumber,
+//         'type' => 'text',
+//         'text' => $whatsappMessage
+//     ];
+//     // $userdata = [
+//     //     'to'   => $userRecipientNumber,
+//     //     'type' => 'text',
+//     //     'text' => $userwhatsappText
+//     // ];
 
     
 
 
-$ch = curl_init($url);
+// $ch = curl_init($url);
 
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => json_encode($data),
-    CURLOPT_HTTPHEADER => [
-        'Authorization: Bearer ' . $apiKey,
-        'Content-Type: application/json'
-    ],
-    CURLOPT_FOLLOWLOCATION => false,
-]);
+// curl_setopt_array($ch, [
+//     CURLOPT_RETURNTRANSFER => true,
+//     CURLOPT_POST => true,
+//     CURLOPT_POSTFIELDS => json_encode($data),
+//     CURLOPT_HTTPHEADER => [
+//         'Authorization: Bearer ' . $apiKey,
+//         'Content-Type: application/json'
+//     ],
+//     CURLOPT_FOLLOWLOCATION => false,
+// ]);
 
-$response = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$redirectUrl = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
-$curlError = curl_error($ch);
+// $response = curl_exec($ch);
+// $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+// $redirectUrl = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+// $curlError = curl_error($ch);
 
-curl_close($ch);
-error_log('OTP API HTTP status: ' . $httpCode);
-error_log('OTP API response: ' . substr((string)$response, 0, 2000));
+// curl_close($ch);
+// error_log('OTP API HTTP status: ' . $httpCode);
+// error_log('OTP API response: ' . substr((string)$response, 0, 2000));
 
-if ($response === false) {
-    http_response_code(502);
-    echo "API_CONNECTION_ERROR";
-    exit;
-}
+// if ($response === false) {
+//     http_response_code(502);
+//     echo "API_CONNECTION_ERROR";
+//     exit;
+// }
 
-if ($httpCode >= 200 && $httpCode < 300) {
-    echo "OTP_SENT";
-} else {
-    error_log('OTP API response: ' . substr((string)$response, 0, 1000));
-    http_response_code(502);
-    echo "API_ERROR_" . $httpCode;
-}
+// if ($httpCode >= 200 && $httpCode < 300) {
+//     echo "OTP_SENT";
+// } else {
+//     error_log('OTP API response: ' . substr((string)$response, 0, 1000));
+//     http_response_code(502);
+//     echo "API_ERROR_" . $httpCode;
+// }
 
 
-exit;
+// exit;
 
 
 ?>

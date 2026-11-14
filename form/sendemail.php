@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-session_start();
+// session_start();
 if (isset($_POST['vercode'])) {
   if ((empty($_SESSION["vercode"])) || ($_SESSION["vercode"] != $_POST['vercode'])) {
     die("<script>alert('Invalid Verification Code'); history.back();</script>");
@@ -31,7 +31,11 @@ if(!isset($_GET['iscontactpage'])){
     $app_time = isset($_POST['app_time']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['app_time']) : "";
     $vpage_name = isset($_POST['vpage_name']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_name']) : "";
     $vpage_url = isset($_POST['vpage_url']) ? preg_replace("/[^\s\S\.\-\_\@a-zA-Z0-9]/", "", $_POST['vpage_url']) : "";
-    
+    $enteredotp=isset($_POST['otpHidden']);
+    if(!isset($_SESSION['otp'])|| $enteredotp!==($_SESSION['otp'])){
+        echo `<script>alert("OTP is not Valid. Try Again");history.back();</script>`;
+        exit;
+    }
     $userwhatsappText=
          "<p>Dear <b>{$userName}</b>,</p>
            <p>Thank you for Booking Appointment with <b>Arogya Healthcare Clinic</b>. We have received your appointment date and time. If you have any query feel free to contact us on our Email or Helpline number</p>
