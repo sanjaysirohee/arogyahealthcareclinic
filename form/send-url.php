@@ -41,7 +41,8 @@ curl_close($ch);
 if ($httpCode == 200 || $httpCode == 201) {
     // Mark this message as sent in session
     $_SESSION['last_sent_msg'] = $requestKey;
-    echo "Message sent successfully via Flowpilot CRM!<br>Response: " . $response;
+    echo "OTP_SENT";
+    // echo "Message sent successfully via Flowpilot CRM!<br>Response: " . $response;
 } else {
     echo "Failed to send message. HTTP Code: " . $httpCode . "<br>Response: " . $response;
 }
